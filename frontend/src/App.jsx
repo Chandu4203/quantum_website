@@ -316,6 +316,8 @@ function Quiz({ onFinish, onBack }) {
 
 function App() {
   const [user, setUser] = useState(null);
+  const [quizOpen, setQuizOpen] = useState(false);
+  const [quizResult, setQuizResult] = useState(null);
 
   useEffect(() => {
     let active = true;
@@ -336,7 +338,53 @@ function App() {
     }
   }
 
-  if (user) return <ChatGPTHome user={user} onLogout={logout} />;
+  function finishQuiz(quizQuestions, answers, durationSeconds) {
+    const score = quizQuestions.reduce((total, question, index) => (
+      total + (answers[index] === question.correct ? 1 : 0)
+    ), 0);
+    const result = { score, total: quizQuestions.length };
+    setQuizResult(result);
+    setQuizOpen(false);
+    fetch('/api/results', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ score, totalQuestions: result.total, durationSeconds })
+    }).catch(() => {});
+  }
+
+  if (user && quizResult) {
+    return (
+      <main className="app-shell">
+        <section className="results-panel">
+          <p className="eyebrow">KNOWLEDGE CHECK COMPLETE</p>
+          <div className="result-layout">
+            <div>
+              <h2>Quiz complete.</h2>
+              <p id="result-copy">You answered {quizResult.score} of {quizResult.total} questions correctly.</p>
+              <button className="back-course-button" type="button" onClick={() => setQuizResult(null)}>
+                Back to course <span aria-hidden="true">→</span>
+              </button>
+            </div>
+            <div className="score-display" aria-label={`${quizResult.score} of ${quizResult.total} correct`}>
+              <span className="score-number">{quizResult.score}</span>
+              <span className="score-denominator">/{quizResult.total} CORRECT</span>
+              <span className="score-ring" aria-hidden="true" />
+            </div>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
+  if (user && quizOpen) {
+    return (
+      <main className="app-shell">
+        <Quiz onFinish={finishQuiz} onBack={() => setQuizOpen(false)} />
+      </main>
+    );
+  }
+
+  if (user) return <ChatGPTHome user={user} onLogout={logout} onQuiz={() => setQuizOpen(true)} />;
 
   return <main className="app-shell"><header className="topbar"><a className="brand" href="#top" aria-label="Project Pulse home"><span className="brand-mark"><span /><span /><span /></span><span>Quantum Computing<span className="brand-accent" /></span></a><div className="topbar-meta"><span className="status-dot" /> <span>20 QUESTIONS</span></div></header><Login onLogin={setUser} /><footer className="footer"><span>PROJECT / 2026</span><span>BUILT FOR BETTER UNDERSTANDING</span></footer></main>;
 }

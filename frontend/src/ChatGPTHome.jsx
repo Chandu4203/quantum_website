@@ -19,7 +19,7 @@ const dayOneLinks = [
 ];
 
 
-export default function ChatGPTHome({ user, onLogout }) {
+export default function ChatGPTHome({ user, onLogout, onQuiz }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [weekOpen, setWeekOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
@@ -88,6 +88,12 @@ function openVideo(link) {
               </div>
             )}
           </section>
+        )}
+        {sidebarOpen && (
+          <button className="quiz-launch-button" type="button" onClick={onQuiz}>
+            <span>Start quiz</span>
+            <span aria-hidden="true">→</span>
+          </button>
         )}
       </aside>
       <main className="main" aria-label="Right panel">
@@ -191,6 +197,22 @@ const css = `
 .week-chevron { color: var(--coral); transition: transform 160ms ease; }
 .week-chevron.is-open { transform: rotate(180deg); }
 .week-menu { padding: 12px 12px 6px; color: var(--muted); font-size: 13px; }
+.quiz-launch-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: calc(100% - 20px);
+  min-height: 40px;
+  margin: 4px 10px 12px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  background: var(--lime);
+  color: var(--ink);
+  font: 500 11px var(--mono);
+  text-align: left;
+}
+.quiz-launch-button:hover { border-color: var(--coral); }
+.quiz-launch-button:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
 .day-one-links { display: grid; gap: 4px; margin-top: 14px; }
 .day-one-heading { color: var(--coral); font: 10px var(--mono); letter-spacing: .06em; text-transform: uppercase; }
 .day-one-links a { padding: 6px 0; color: var(--muted); font-size: 12px; line-height: 1.4; text-decoration: none; }
