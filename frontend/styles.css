@@ -37,11 +37,32 @@ button { font: inherit; cursor: pointer; }
 .back-course-button:hover { background: var(--coral); }
 .back-course-button span { margin-left: 28px; font-size: 18px; }
 .quiz-footer-actions { display: flex; align-items: center; gap: 18px; }
+.quiz-footer { position: sticky; bottom: 0; z-index: 2; background: var(--paper); }
 .quiz-back-button { border: 1px solid var(--line); padding: 10px 14px; background: transparent; color: var(--ink); font: 11px var(--mono); }
 .quiz-back-button:hover { border-color: var(--coral); color: var(--coral); }
+.quiz-result-counts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 36px 0; }
+.quiz-result-counts > div { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border: 1px solid var(--line); background: var(--cream); }
+.quiz-result-counts dt { color: var(--muted); font: 10px var(--mono); text-transform: uppercase; }
+.quiz-result-counts dd { margin: 0; font-size: 22px; font-weight: 600; }
+.count-correct dd { color: #426900; }
+.count-incorrect dd { color: #b33e2e; }
+.count-unattempted dd { color: var(--muted); }
+.answer-review-heading { margin: 40px 0 0; font-size: 20px; }
+.answer-review { margin: 18px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+.review-question { padding: 20px 0; border-bottom: 1px solid var(--line); }
+.review-question-meta { display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font: 10px var(--mono); text-transform: uppercase; }
+.review-status { color: var(--ink); }
+.is-correct .review-status { color: #426900; }
+.is-incorrect .review-status { color: #b33e2e; }
+.review-question h3 { margin: 12px 0; font-size: 16px; }
+.review-question p { margin: 8px 0 0; color: var(--muted); line-height: 1.5; }
+.review-question p strong { color: var(--ink); font-weight: 600; }
+.review-explanation { margin-top: 12px; padding-left: 14px; border-left: 2px solid var(--coral); }
+.review-explanation p:first-child { margin-top: 0; }
+.review-explanation p:last-child { margin-bottom: 0; }
 [hidden] { display: none !important; }
 .answer.selected { background: var(--lime); border-color: var(--lime); }
-@media (max-width: 700px) { .app-shell { padding: 0 24px; }.topbar { min-height: 65px; }.topbar-meta { font-size: 8px; }.topbar-meta .meta-divider, .topbar-meta .status-dot { display: none; }.auth-panel { display: block; padding: 72px 0 75px; min-height: auto; }.auth-copy h1 { font-size: 59px; }.login-form { margin-top: 65px; }.hero { display: block; padding: 72px 0 35px; min-height: auto; }.hero h1 { font-size: 59px; }.hero-visual { height: 320px; margin-top: 20px; transform: scale(.83); }.orbit-one { width: 320px; }.orbit-two { width: 320px; }.orbit-three { height: 320px; }.label-top { left: 10%; }.label-bottom { bottom: 10px; }.quiz-panel, .results-panel { margin: 38px auto 80px; }.progress-track { margin: 23px 0 42px; }.answers { grid-template-columns: 1fr; }.question-area h2 { font-size: 35px; }.result-layout { display: block; }.score-display { margin: 60px auto 20px; }.footer { font-size: 8px; gap: 20px; }.footer span:last-child { text-align: right; } }
+@media (max-width: 700px) { .app-shell { padding: 0 24px; }.topbar { min-height: 65px; }.topbar-meta { font-size: 8px; }.topbar-meta .meta-divider, .topbar-meta .status-dot { display: none; }.auth-panel { display: block; padding: 72px 0 75px; min-height: auto; }.auth-copy h1 { font-size: 59px; }.login-form { margin-top: 65px; }.hero { display: block; padding: 72px 0 35px; min-height: auto; }.hero h1 { font-size: 59px; }.hero-visual { height: 320px; margin-top: 20px; transform: scale(.83); }.orbit-one { width: 320px; }.orbit-two { width: 320px; }.orbit-three { height: 320px; }.label-top { left: 10%; }.label-bottom { bottom: 10px; }.quiz-panel, .results-panel { margin: 38px auto 80px; }.progress-track { margin: 23px 0 42px; }.answers { grid-template-columns: 1fr; }.question-area h2 { font-size: 35px; }.result-layout { display: block; }.quiz-result-counts { grid-template-columns: 1fr; }.quiz-result-counts > div { padding: 12px 14px; }.score-display { margin: 60px auto 20px; }.footer { font-size: 8px; gap: 20px; }.footer span:last-child { text-align: right; } }
 
 /* Authenticated course portal */
 .app-shell:has(#app-content:not([hidden])) { max-width: none; padding: 0; background: #f0f1ff; }

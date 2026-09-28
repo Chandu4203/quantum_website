@@ -2,6 +2,28 @@
 import '../styles.css';
 import ChatGPTHome from './ChatGPTHome.jsx';
 
+const explanations = {
+  FOUNDATIONS: 'A shared understanding of the next decision shows the team knows what outcome to move toward.',
+  'WAYS OF WORKING': 'Raising a risk early gives the team time to reduce its impact before it affects the outcome.',
+  COLLABORATION: 'Feedback is easiest to act on when it is specific to recent work and its context is still clear.',
+  DECISIONS: 'Recording the blocker and an owner makes the next step visible instead of leaving the decision stalled.',
+  DELIVERY: 'A useful update makes changes and the next action clear, not just how much activity took place.',
+  OWNERSHIP: 'The whole team contributes to quality; it is not limited to one role or person.',
+  LEARNING: 'A retrospective is valuable when the team turns what it learned into an improvement to try.',
+  MOMENTUM: 'Visible progress and honest context help everyone stay aligned between milestones.',
+  GOALS: 'A goal needs to state the outcome so the team can make decisions and measure progress against it.',
+  PLANNING: 'Smaller milestones make progress easier to see and give the team chances to adjust the plan.',
+  COMMUNICATION: 'Progress, risks, and the next decision give readers the context they need to act.',
+  QUALITY: 'Frequent checks find problems while there is still time to correct them, rather than after release.',
+  PRIORITIES: 'Understanding the impact first lets the team make a deliberate tradeoff with existing work.',
+  DEPENDENCIES: 'Clear ownership, timing, and handoff requirements make cross-team dependencies actionable.',
+  DOCUMENTATION: 'Documentation is useful when it preserves decisions in a form people can use.',
+  CUSTOMERS: 'Testing against a real user need provides evidence that the solution is useful.',
+  SECURITY: 'A suspected security issue should be reported promptly through the agreed channel so it can be contained.',
+  INCLUSION: 'Input from people closest to the problem adds relevant context and improves the decision.',
+  REFLECTION: 'Learning creates value when it changes a future action or decision.'
+};
+
 const questions = [
   ['FOUNDATIONS', 'What is the clearest sign that our project is moving in the right direction?', ['More meetings on the calendar', 'A shared understanding of the next decision', 'Longer status updates', 'Fewer ideas in the backlog'], 1],
   ['WAYS OF WORKING', 'When should a project member raise a risk?', ['When they have a complete solution', 'At the end of the sprint', 'As soon as it could affect the outcome', 'Only when asked directly'], 2],
@@ -23,7 +45,7 @@ const questions = [
   ['INCLUSION', 'How can a team improve decision quality?', ['Invite the perspectives closest to the problem', 'Limit input to the loudest voice', 'Avoid disagreement', 'Decide before sharing context'], 0],
   ['OWNERSHIP', 'What does clear ownership provide?', ['A person responsible for moving the work forward', 'A reason to work alone', 'A way to avoid collaboration', 'A replacement for project goals'], 0],
   ['REFLECTION', 'What should the team do after learning something important?', ['Apply it to the next action or decision', 'Store it without sharing', 'Wait for someone else to use it', 'Remove it from the project notes'], 0]
-].map(([category, question, answers, correct]) => ({ category, question, answers, correct }));
+].map(([category, question, answers, correct]) => ({ category, question, answers, correct, explanation: explanations[category] }));
 
 const days = [
   { name: 'DAY 1', links: [{ title: 'Installing Qiskit & setting up your environment', href: 'https://youtu.be/93-zLTppFZw' }, { title: 'Vectors, what even are they?', href: 'https://www.youtube.com/watch?v=fNk_zzaMoSs' }] },
@@ -311,7 +333,53 @@ function Quiz({ onFinish, onBack }) {
   const minutes = Math.floor(seconds / 60);
   const displaySeconds = seconds % 60;
 
-  return <section className="quiz-panel" id="quiz-panel"><div className="quiz-header"><div><p className="eyebrow">KNOWLEDGE CHECK</p><p className="question-label">EXAM 1 <span>/ {quizQuestions.length} QUESTIONS</span></p></div><div className="timer">{String(minutes).padStart(2, '0')}:{String(displaySeconds).padStart(2, '0')}</div></div><div className="progress-track"><div className="progress-fill" style={{ width: `${answered / quizQuestions.length * 100}%` }} /></div><div className="question-area"><div className="question-list">{quizQuestions.map((item, questionIndex) => <section className="question-card" key={item.question}><p className="category">{item.category}</p><h2>{String(questionIndex + 1).padStart(2, '0')}. {item.question}</h2><div className="answers">{item.answers.map((answer, answerIndex) => <label className={`answer${answers[questionIndex] === answerIndex ? ' selected' : ''}`} key={answer}><input type="radio" name={`question-${questionIndex}`} checked={answers[questionIndex] === answerIndex} onChange={() => setAnswers((current) => ({ ...current, [questionIndex]: answerIndex }))} /><span className="answer-key">{String.fromCharCode(65 + answerIndex)}</span><span>{answer}</span></label>)}</div></section>)}</div></div><div className="quiz-footer"><div className="quiz-footer-actions"><button className="quiz-back-button" onClick={onBack} type="button">Back to Course</button><span>{answered} of {quizQuestions.length} answered</span></div><button className="next-button" type="button" disabled={answered !== quizQuestions.length} onClick={() => onFinish(quizQuestions, answers, 1800 - seconds)}>Submit Exam <span>→</span></button></div></section>;
+  return <section className="quiz-panel" id="quiz-panel"><div className="quiz-header"><div><p className="eyebrow">KNOWLEDGE CHECK</p><p className="question-label">EXAM 1 <span>/ {quizQuestions.length} QUESTIONS</span></p></div><div className="timer">{String(minutes).padStart(2, '0')}:{String(displaySeconds).padStart(2, '0')}</div></div><div className="progress-track"><div className="progress-fill" style={{ width: `${answered / quizQuestions.length * 100}%` }} /></div><div className="question-area"><div className="question-list">{quizQuestions.map((item, questionIndex) => <section className="question-card" key={item.question}><p className="category">{item.category}</p><h2>{String(questionIndex + 1).padStart(2, '0')}. {item.question}</h2><div className="answers">{item.answers.map((answer, answerIndex) => <label className={`answer${answers[questionIndex] === answerIndex ? ' selected' : ''}`} key={answer}><input type="radio" name={`question-${questionIndex}`} checked={answers[questionIndex] === answerIndex} onChange={() => setAnswers((current) => ({ ...current, [questionIndex]: answerIndex }))} /><span className="answer-key">{String.fromCharCode(65 + answerIndex)}</span><span>{answer}</span></label>)}</div></section>)}</div></div><div className="quiz-footer"><div className="quiz-footer-actions"><button className="quiz-back-button" onClick={onBack} type="button">Back to Course</button><span>{answered} of {quizQuestions.length} answered</span></div><button className="next-button" type="button" onClick={() => onFinish(quizQuestions, answers, 1800 - seconds)}>Submit Exam <span>→</span></button></div></section>;
+}
+
+function QuizResults({ result, onBack }) {
+  return (
+    <section className="results-panel">
+      <p className="eyebrow">KNOWLEDGE CHECK COMPLETE</p>
+      <div className="result-layout">
+        <div>
+          <h2>Quiz complete.</h2>
+          <p id="result-copy">Review your results and the reasoning behind each missed answer.</p>
+          <button className="back-course-button" type="button" onClick={onBack}>
+            Back to course <span aria-hidden="true">→</span>
+          </button>
+        </div>
+        <div className="score-display" aria-label={`${result.correct} of ${result.total} correct`}>
+          <span className="score-number">{result.correct}</span>
+          <span className="score-denominator">/{result.total} CORRECT</span>
+          <span className="score-ring" aria-hidden="true" />
+        </div>
+      </div>
+      <dl className="quiz-result-counts" aria-label="Exam outcome counts">
+        <div className="count-correct"><dt>Correct</dt><dd>{result.correct}</dd></div>
+        <div className="count-incorrect"><dt>Incorrect</dt><dd>{result.incorrect}</dd></div>
+        <div className="count-unattempted"><dt>Unattempted</dt><dd>{result.unattempted}</dd></div>
+      </dl>
+      <h3 className="answer-review-heading">Question review</h3>
+      <ol className="answer-review">
+        {result.questions.map((question, index) => (
+          <li className={`review-question is-${question.status}`} key={question.question}>
+            <div className="review-question-meta">
+              <span>{String(index + 1).padStart(2, '0')} · {question.category}</span>
+              <span className="review-status">{question.status}</span>
+            </div>
+            <h3>{question.question}</h3>
+            <p><strong>Your answer:</strong> {question.selectedAnswer === null ? 'Not answered' : question.answers[question.selectedAnswer]}</p>
+            {question.status !== 'correct' && (
+              <div className="review-explanation">
+                <p><strong>Correct answer:</strong> {question.answers[question.correct]}</p>
+                {question.status === 'incorrect' && <p><strong>Why:</strong> {question.explanation}</p>}
+              </div>
+            )}
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
 }
 
 function App() {
@@ -334,57 +402,52 @@ function App() {
     try {
       await fetch('/api/logout', { method: 'POST' });
     } finally {
+      setQuizOpen(false);
+      setQuizResult(null);
       setUser(null);
     }
   }
 
   function finishQuiz(quizQuestions, answers, durationSeconds) {
-    const score = quizQuestions.reduce((total, question, index) => (
-      total + (answers[index] === question.correct ? 1 : 0)
-    ), 0);
-    const result = { score, total: quizQuestions.length };
+    const reviewedQuestions = quizQuestions.map((question, index) => ({
+      ...question,
+      selectedAnswer: answers[index] ?? null,
+      status: answers[index] === undefined
+        ? 'unattempted'
+        : answers[index] === question.correct ? 'correct' : 'incorrect'
+    }));
+    const result = {
+      correct: reviewedQuestions.filter((question) => question.status === 'correct').length,
+      incorrect: reviewedQuestions.filter((question) => question.status === 'incorrect').length,
+      unattempted: reviewedQuestions.filter((question) => question.status === 'unattempted').length,
+      total: quizQuestions.length,
+      questions: reviewedQuestions
+    };
     setQuizResult(result);
     setQuizOpen(false);
     fetch('/api/results', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ score, totalQuestions: result.total, durationSeconds })
+      body: JSON.stringify({ score: result.correct, totalQuestions: result.total, durationSeconds })
     }).catch(() => {});
   }
 
-  if (user && quizResult) {
+  if (user) {
+    const quizContent = quizResult
+      ? <QuizResults result={quizResult} onBack={() => setQuizResult(null)} />
+      : quizOpen
+        ? <Quiz onFinish={finishQuiz} onBack={() => setQuizOpen(false)} />
+        : null;
+
     return (
-      <main className="app-shell">
-        <section className="results-panel">
-          <p className="eyebrow">KNOWLEDGE CHECK COMPLETE</p>
-          <div className="result-layout">
-            <div>
-              <h2>Quiz complete.</h2>
-              <p id="result-copy">You answered {quizResult.score} of {quizResult.total} questions correctly.</p>
-              <button className="back-course-button" type="button" onClick={() => setQuizResult(null)}>
-                Back to course <span aria-hidden="true">→</span>
-              </button>
-            </div>
-            <div className="score-display" aria-label={`${quizResult.score} of ${quizResult.total} correct`}>
-              <span className="score-number">{quizResult.score}</span>
-              <span className="score-denominator">/{quizResult.total} CORRECT</span>
-              <span className="score-ring" aria-hidden="true" />
-            </div>
-          </div>
-        </section>
-      </main>
+      <ChatGPTHome
+        user={user}
+        onLogout={logout}
+        onQuiz={() => { setQuizResult(null); setQuizOpen(true); }}
+        quizContent={quizContent}
+      />
     );
   }
-
-  if (user && quizOpen) {
-    return (
-      <main className="app-shell">
-        <Quiz onFinish={finishQuiz} onBack={() => setQuizOpen(false)} />
-      </main>
-    );
-  }
-
-  if (user) return <ChatGPTHome user={user} onLogout={logout} onQuiz={() => setQuizOpen(true)} />;
 
   return <main className="app-shell"><header className="topbar"><a className="brand" href="#top" aria-label="Project Pulse home"><span className="brand-mark"><span /><span /><span /></span><span>Quantum Computing<span className="brand-accent" /></span></a><div className="topbar-meta"><span className="status-dot" /> <span>20 QUESTIONS</span></div></header><Login onLogin={setUser} /><footer className="footer"><span>PROJECT / 2026</span><span>BUILT FOR BETTER UNDERSTANDING</span></footer></main>;
 }

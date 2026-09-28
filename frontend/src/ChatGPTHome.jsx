@@ -19,7 +19,7 @@ const dayOneLinks = [
 ];
 
 
-export default function ChatGPTHome({ user, onLogout, onQuiz }) {
+export default function ChatGPTHome({ user, onLogout, onQuiz, quizContent }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [weekOpen, setWeekOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
@@ -101,7 +101,11 @@ function openVideo(link) {
           <span className="account-label">SIGNED IN AS <strong>{accountName}</strong></span>
           <button className="logout-button" type="button" onClick={onLogout}>Sign out</button>
         </header>
-        {selectedVideo && (
+        {quizContent ? (
+          <section className="quiz-content" aria-label="Quiz">
+            {quizContent}
+          </section>
+        ) : selectedVideo && (
           <section className="video-panel" aria-label="Selected video">
             <p className="video-label">DAY 1 VIDEO</p>
             <h1>{selectedVideo.title}</h1>
@@ -218,6 +222,7 @@ const css = `
 .day-one-links a { padding: 6px 0; color: var(--muted); font-size: 12px; line-height: 1.4; text-decoration: none; }
 .day-one-links a:hover { color: var(--ink); text-decoration: underline; text-decoration-color: var(--coral); }
 .main { flex: 1; min-width: 0; background: var(--paper); }
+.quiz-content { height: calc(100% - 64px); overflow: auto; padding: 1px 32px 32px; }
 .account-header {
   display: flex;
   align-items: center;
@@ -250,6 +255,7 @@ const css = `
 @media (max-width: 520px) {
   .account-header { gap: 10px; padding-inline: 12px; }
   .account-label { font-size: 9px; }
+  .quiz-content { padding: 1px 14px 20px; }
   .video-panel { padding: 20px 14px; }
   .video-panel h1 { font-size: 20px; }
 }
