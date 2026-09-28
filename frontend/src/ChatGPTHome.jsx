@@ -1,9 +1,23 @@
 import { useState } from "react";
 
 const dayOneLinks = [
-  { title: "Installing Qiskit & setting up your environment", href: "https://shorturl.at/niWwc", videoId: "93-zLTppFZw" },
-  { title: "Vectors, what even are they?", href: "https://www.youtube.com/watch?v=fNk_zzaMoSs", videoId: "fNk_zzaMoSs" },
+  {
+    title:
+      "How to Install Qiskit | Coding with Qiskit 1.x | Programming on Quantum Computers",
+    href: "https://www.youtube.com/watch?v=dZWz4Gs_BuI",
+    videoId: "dZWz4Gs_BuI",
+    embedUrl:
+      "https://www.youtube.com/embed/dZWz4Gs_BuI?rel=0&modestbranding=1&playsinline=1",
+  },
+  {
+    title: "Vectors, what even are they?",
+    href: "https://www.youtube.com/watch?v=fNk_zzaMoSs",
+    videoId: "fNk_zzaMoSs",
+    embedUrl:
+      "https://www.youtube.com/embed/fNk_zzaMoSs?rel=0&modestbranding=1&playsinline=1",
+  },
 ];
+
 
 export default function ChatGPTHome({ user, onLogout }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -12,11 +26,19 @@ export default function ChatGPTHome({ user, onLogout }) {
   const signedInAs = user?.displayName || user?.username || "Signed-in user";
   const accountName = user?.username ? `${signedInAs} (${user.username})` : signedInAs;
 
-  function openVideo(link) {
-    setSelectedVideo(link);
-    setSidebarOpen(false);
-    setWeekOpen(false);
-  }
+
+function openVideo(link) {
+  const videoUrl = link.embedUrl;
+
+  setSelectedVideo({
+    ...link,
+    embedUrl: videoUrl,
+  });
+
+  setSidebarOpen(false);
+  setWeekOpen(false);
+}
+
 
   return (
     <div className={`app${sidebarOpen ? "" : " sidebar-collapsed"}`}>
@@ -78,14 +100,24 @@ export default function ChatGPTHome({ user, onLogout }) {
             <p className="video-label">DAY 1 VIDEO</p>
             <h1>{selectedVideo.title}</h1>
             <div className="video-frame">
-              <iframe
-                src={`https://www.youtube-nocookie.com/embed/${selectedVideo.videoId}`}
-                title={selectedVideo.title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                referrerPolicy="strict-origin-when-cross-origin"
-              />
+            <iframe
+                src={selectedVideo.embedUrl}
+                  title={selectedVideo.title}
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowFullScreen
+  referrerPolicy="strict-origin-when-cross-origin"
+  loading="lazy"
+  style={{
+    width: "100%",
+    height: "100%",
+    border: "0",
+  }}
+  />
+
             </div>
+            <a className="youtube-fallback" href={selectedVideo.href} target="_blank" rel="noreferrer">
+              Open video on YouTube <span aria-hidden="true">↗</span>
+            </a>
           </section>
         )}
       </main>
@@ -191,6 +223,8 @@ const css = `
 .video-panel h1 { margin: 0 0 22px; color: var(--ink); font: 600 24px/1.25 var(--display); }
 .video-frame { width: 100%; max-width: 1100px; aspect-ratio: 16 / 9; background: var(--ink); }
 .video-frame iframe { display: block; width: 100%; height: 100%; border: 0; }
+.youtube-fallback { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; color: var(--coral); font: 11px var(--mono); text-decoration: none; }
+.youtube-fallback:hover { color: var(--ink); text-decoration: underline; text-decoration-color: var(--coral); }
 @media (max-width: 520px) {
   .account-header { gap: 10px; padding-inline: 12px; }
   .account-label { font-size: 9px; }
