@@ -32,7 +32,7 @@ MEMBERS = {
     "23BQ1A4202": ("A.Sai Charan", "23BQ1A4202"),
     "23BQ1A4231": ("CH.Aparna", "23BQ1A4231"),
     "23BQ1A4251": ("G.Kamesh", "23BQ1A4251"),
-    "24BQ5A4202": ("K.chandra sekhar", "24BQ5A4203"),
+    "24BQ5A4203": ("K.chandra sekhar", "24BQ5A4203"),
 }
 
 

@@ -2,50 +2,63 @@
 import '../styles.css';
 import ChatGPTHome from './ChatGPTHome.jsx';
 
-const explanations = {
-  FOUNDATIONS: 'A shared understanding of the next decision shows the team knows what outcome to move toward.',
-  'WAYS OF WORKING': 'Raising a risk early gives the team time to reduce its impact before it affects the outcome.',
-  COLLABORATION: 'Feedback is easiest to act on when it is specific to recent work and its context is still clear.',
-  DECISIONS: 'Recording the blocker and an owner makes the next step visible instead of leaving the decision stalled.',
-  DELIVERY: 'A useful update makes changes and the next action clear, not just how much activity took place.',
-  OWNERSHIP: 'The whole team contributes to quality; it is not limited to one role or person.',
-  LEARNING: 'A retrospective is valuable when the team turns what it learned into an improvement to try.',
-  MOMENTUM: 'Visible progress and honest context help everyone stay aligned between milestones.',
-  GOALS: 'A goal needs to state the outcome so the team can make decisions and measure progress against it.',
-  PLANNING: 'Smaller milestones make progress easier to see and give the team chances to adjust the plan.',
-  COMMUNICATION: 'Progress, risks, and the next decision give readers the context they need to act.',
-  QUALITY: 'Frequent checks find problems while there is still time to correct them, rather than after release.',
-  PRIORITIES: 'Understanding the impact first lets the team make a deliberate tradeoff with existing work.',
-  DEPENDENCIES: 'Clear ownership, timing, and handoff requirements make cross-team dependencies actionable.',
-  DOCUMENTATION: 'Documentation is useful when it preserves decisions in a form people can use.',
-  CUSTOMERS: 'Testing against a real user need provides evidence that the solution is useful.',
-  SECURITY: 'A suspected security issue should be reported promptly through the agreed channel so it can be contained.',
-  INCLUSION: 'Input from people closest to the problem adds relevant context and improves the decision.',
-  REFLECTION: 'Learning creates value when it changes a future action or decision.'
-};
-
 const questions = [
-  ['FOUNDATIONS', 'What is the clearest sign that our project is moving in the right direction?', ['More meetings on the calendar', 'A shared understanding of the next decision', 'Longer status updates', 'Fewer ideas in the backlog'], 1],
-  ['WAYS OF WORKING', 'When should a project member raise a risk?', ['When they have a complete solution', 'At the end of the sprint', 'As soon as it could affect the outcome', 'Only when asked directly'], 2],
-  ['COLLABORATION', 'What makes feedback most useful to the team?', ['Keeping it general', 'Sharing it close to the work', 'Waiting for a review meeting', 'Sending it only to the lead'], 1],
-  ['DECISIONS', 'A decision is blocked. What is the best next move?', ['Document the blocker and name the owner', 'Keep working around it silently', 'Wait for someone to notice', 'Add it to the next quarterly plan'], 0],
-  ['DELIVERY', 'What should a good project update make easy to understand?', ['How busy everyone has been', 'What changed and what happens next', 'Every conversation from the week', 'Why the original plan was perfect'], 1],
-  ['OWNERSHIP', 'Who owns the quality of the final project outcome?', ['Only the project lead', 'The person who wrote the most code', 'The whole project team', 'The newest team member'], 2],
-  ['LEARNING', 'What is the most valuable outcome of a retrospective?', ['A longer list of action items', 'A shared improvement to try next', 'A perfect record of the past', 'A reason to postpone delivery'], 1],
-  ['MOMENTUM', 'What keeps a strong team aligned between milestones?', ['Small, visible progress and honest context', 'Avoiding difficult conversations', 'Changing priorities often', 'Working independently until launch'], 0],
-  ['GOALS', 'What should every project goal make clear?', ['The outcome we are trying to create', 'The number of meetings required', 'Who gets the most credit', 'The tools everyone must use'], 0],
-  ['PLANNING', 'What is the best reason to break work into smaller milestones?', ['To make progress visible and easier to adjust', 'To create more reports', 'To avoid making decisions', 'To guarantee no changes happen'], 0],
-  ['COMMUNICATION', 'What belongs in a useful status update?', ['Progress, risks, and the next decision', 'Only completed tasks', 'Personal opinions about the team', 'Every message sent that week'], 0],
-  ['QUALITY', 'When should quality checks happen?', ['Throughout the work, not only at the end', 'Only after launch', 'When a stakeholder complains', 'After the project is archived'], 0],
-  ['PRIORITIES', 'A new urgent request arrives. What should happen first?', ['Understand its impact on current priorities', 'Start immediately without telling anyone', 'Cancel all existing work', 'Ignore it until the next review'], 0],
-  ['DEPENDENCIES', 'How should a team handle a dependency on another group?', ['Name the owner, timing, and required handoff', 'Wait silently for delivery', 'Duplicate the work without discussion', 'Remove it from the plan'], 0],
-  ['DOCUMENTATION', 'What makes project documentation valuable?', ['It captures decisions people can act on', 'It is as long as possible', 'It uses complex language', 'It is updated only after launch'], 0],
-  ['CUSTOMERS', 'What is the strongest way to test whether a solution is useful?', ['Observe it against a real user need', 'Ask only the project lead', 'Add more features', 'Wait for internal approval alone'], 0],
-  ['SECURITY', 'What should a member do with a suspected security issue?', ['Raise it through the agreed channel immediately', 'Post it publicly', 'Wait until the final release', 'Keep it private indefinitely'], 0],
-  ['INCLUSION', 'How can a team improve decision quality?', ['Invite the perspectives closest to the problem', 'Limit input to the loudest voice', 'Avoid disagreement', 'Decide before sharing context'], 0],
-  ['OWNERSHIP', 'What does clear ownership provide?', ['A person responsible for moving the work forward', 'A reason to work alone', 'A way to avoid collaboration', 'A replacement for project goals'], 0],
-  ['REFLECTION', 'What should the team do after learning something important?', ['Apply it to the next action or decision', 'Store it without sharing', 'Wait for someone else to use it', 'Remove it from the project notes'], 0]
-].map(([category, question, answers, correct]) => ({ category, question, answers, correct, explanation: explanations[category] }));
+  { category: 'FOUNDATIONS', question: 'What is quantum computing primarily based on?', answers: ['Classical Boolean logic', 'Principles of quantum mechanics', 'Mechanical computation', 'Binary arithmetic alone'], correct: 1 },
+  { category: 'FOUNDATIONS', question: 'What is the fundamental unit of quantum information?', answers: ['Bit', 'Byte', 'Qubit', 'Pixel'], correct: 2 },
+  { category: 'FOUNDATIONS', question: 'What are the possible states of a classical bit?', answers: ['0 and 1 simultaneously', 'Only 0 or 1', 'Any complex number', 'Infinite states'], correct: 1 },
+  { category: 'FOUNDATIONS', question: 'What makes a qubit different from a classical bit?', answers: ['It can exist in a superposition of basis states', 'It always stores two readable bits', 'It has no measurable state', 'It only represents the number 2'], correct: 0 },
+  { category: 'FOUNDATIONS', question: 'Which expression represents a general single-qubit state?', answers: ['|ψ⟩ = α|0⟩ + β|1⟩', '|ψ⟩ = 0 + 1', '|ψ⟩ = α + β', '|ψ⟩ = 01'], correct: 0 },
+  { category: 'FOUNDATIONS', question: 'What is the primary purpose of quantum gates?', answers: ['Store classical files', 'Manipulate quantum states', 'Increase computer memory', 'Convert Python into Java'], correct: 1 },
+  { category: 'FOUNDATIONS', question: 'Which quantum gate creates an equal superposition from |0⟩?', answers: ['Pauli-X gate', 'Hadamard gate', 'CNOT gate', 'Identity gate'], correct: 1 },
+  { category: 'FOUNDATIONS', question: 'What happens when a qubit is measured in the computational basis?', answers: ['It always produces 0', 'It always produces 1', 'It produces a classical outcome of 0 or 1', 'It produces an imaginary number'], correct: 2 },
+  { category: 'FOUNDATIONS', question: 'What is quantum entanglement?', answers: ['A type of classical encryption', 'Quantum correlations between systems that cannot be described as independent states', 'A programming language', 'A method of increasing CPU speed'], correct: 1 },
+  { category: 'FOUNDATIONS', question: 'Which statement about quantum computing is correct?', answers: ['It replaces every classical computer', 'It solves every problem instantly', 'It can provide advantages for certain computational problems', 'It requires no electricity'], correct: 2 },
+  { category: 'SUPERPOSITION', question: 'What does superposition mean in quantum computing?', answers: ['A qubit has a combination of possible basis-state amplitudes', 'A qubit stores unlimited readable classical data', 'Two computers run simultaneously', 'A computer performs no calculations'], correct: 0 },
+  { category: 'SUPERPOSITION', question: 'What is the probability of measuring 0 from the state (|0⟩ + |1⟩)/√2?', answers: ['0%', '25%', '50%', '100%'], correct: 2 },
+  { category: 'SUPERPOSITION', question: 'Which mathematical property allows quantum amplitudes to combine?', answers: ['Integer division', 'Linear algebra', 'Boolean subtraction', 'String concatenation'], correct: 1 },
+  { category: 'SUPERPOSITION', question: 'What is the state of a qubit after applying a Hadamard gate to |0⟩?', answers: ['(|0⟩ + |1⟩)/√2', '|0⟩ only', '|1⟩ only', '(|0⟩ - |1⟩)/2'], correct: 0 },
+  { category: 'SUPERPOSITION', question: 'What happens to a qubit when it is measured in the computational basis?', answers: ['All amplitudes become readable', 'It produces one classical measurement outcome', 'It creates unlimited copies', 'It always produces 0'], correct: 1 },
+  { category: 'INTERFERENCE', question: 'What is quantum interference?', answers: ['Interaction between classical computers', 'Combining probability amplitudes constructively or destructively', 'Randomly deleting qubits', 'Increasing the number of classical bits'], correct: 1 },
+  { category: 'INTERFERENCE', question: 'What happens during constructive interference?', answers: ['Amplitudes reinforce each other', 'Amplitudes always cancel', 'Qubits become classical bits', 'All outcomes disappear'], correct: 0 },
+  { category: 'INTERFERENCE', question: 'What happens during destructive interference?', answers: ['Amplitudes always increase', 'Amplitudes cancel or reduce one another', 'Amplitudes become infinite', 'Quantum states become strings'], correct: 1 },
+  { category: 'INTERFERENCE', question: 'Why is interference useful in quantum algorithms?', answers: ['It guarantees every answer is correct', 'It can amplify desired outcomes and suppress unwanted outcomes', 'It removes all computational costs', 'It allows direct reading of every amplitude'], correct: 1 },
+  { category: 'INTERFERENCE', question: 'What happens when a Hadamard gate is applied twice consecutively to |0⟩?', answers: ['The state becomes |1⟩', 'The state returns to |0⟩', 'The state becomes permanently random', 'The state becomes |0⟩ + |1⟩ without normalization'], correct: 1 },
+  { category: 'QUANTUM SPEEDUP', question: 'Why is quantum computing not a magical speedup for every problem?', answers: ['Quantum computers cannot perform calculations', 'Quantum algorithms need specific mathematical structures to gain advantages', 'Quantum computers cannot use algorithms', 'Quantum computers only perform addition'], correct: 1 },
+  { category: 'QUANTUM SPEEDUP', question: 'What does quantum parallelism refer to?', answers: ['Processing quantum state components through quantum operations', 'Running multiple operating systems', 'Using multiple keyboards', 'Increasing internet speed'], correct: 0 },
+  { category: 'QUANTUM SPEEDUP', question: 'Which statement about quantum speedup is accurate?', answers: ['All quantum algorithms are faster than classical algorithms', 'Quantum computers always outperform GPUs', 'Speedup depends on the problem and algorithm', 'Quantum computers eliminate computational costs'], correct: 2 },
+  { category: 'QUANTUM SPEEDUP', question: 'Why does measuring a superposition not reveal every possible answer?', answers: ['Measurement produces a classical outcome rather than exposing all amplitudes', 'Quantum computers cannot store information', 'Measurement always returns zero', 'Superposition contains no information'], correct: 0 },
+  { category: 'QUANTUM SPEEDUP', question: 'What is required to obtain a practical quantum advantage?', answers: ['A quantum algorithm suited to the problem and hardware capable of executing it', 'A quantum computer with unlimited memory', 'Removing all measurements', 'Using only classical bits'], correct: 0 },
+  { category: 'COMPLEX NUMBERS', question: 'What is the general form of a complex number?', answers: ['a + b', 'a + bi', 'ab', 'a/b'], correct: 1 },
+  { category: 'COMPLEX NUMBERS', question: 'What is the value of i²?', answers: ['1', '0', '-1', 'i'], correct: 2 },
+  { category: 'COMPLEX NUMBERS', question: 'What is the complex conjugate of 3 + 4i?', answers: ['3 + 4i', '-3 + 4i', '3 - 4i', '-3 - 4i'], correct: 2 },
+  { category: 'COMPLEX NUMBERS', question: 'What is the magnitude of the complex number 3 + 4i?', answers: ['7', '5', '12', '25'], correct: 1 },
+  { category: 'COMPLEX NUMBERS', question: 'What is the squared magnitude of z = a + bi?', answers: ['a + b', 'a² + b²', 'a - b', 'ab'], correct: 1 },
+  { category: 'VECTORS', question: 'Which of the following is a valid two-dimensional vector?', answers: ['[1, 2]', '1 + 2', '1/2', '12'], correct: 0 },
+  { category: 'VECTORS', question: 'What is the standard column-vector representation of |0⟩?', answers: ['[0, 1]ᵀ', '[1, 0]ᵀ', '[1, 1]ᵀ', '[0, 0]ᵀ'], correct: 1 },
+  { category: 'VECTORS', question: 'What is the standard column-vector representation of |1⟩?', answers: ['[1, 0]ᵀ', '[1, 1]ᵀ', '[0, 1]ᵀ', '[0, 0]ᵀ'], correct: 2 },
+  { category: 'VECTORS', question: 'What condition must a normalized quantum state satisfy?', answers: ['The sum of amplitudes equals 0', 'The sum of squared magnitudes of amplitudes equals 1', 'Every amplitude equals 1', 'Every amplitude must be real'], correct: 1 },
+  { category: 'VECTORS', question: 'Which Python library is commonly used for numerical vector and matrix operations?', answers: ['NumPy', 'Flask', 'Django', 'BeautifulSoup'], correct: 0 },
+  { category: 'INNER PRODUCTS', question: 'What does an inner product measure between two vectors?', answers: ['Their file size', 'A mathematical relationship involving their components and overlap', 'Their execution time', 'Their memory address'], correct: 1 },
+  { category: 'INNER PRODUCTS', question: 'Which notation commonly represents an inner product in quantum mechanics?', answers: ['|ψ⟩', '⟨φ|ψ⟩', '⊗', '∇'], correct: 1 },
+  { category: 'INNER PRODUCTS', question: 'What is the inner product of [1,0] and [1,0]?', answers: ['0', '1', '2', '-1'], correct: 1 },
+  { category: 'INNER PRODUCTS', question: 'What is the inner product of [1,0] and [0,1]?', answers: ['0', '1', '2', '-1'], correct: 0 },
+  { category: 'INNER PRODUCTS', question: 'What is the inner product of two orthogonal vectors?', answers: ['1', '-1', '0', 'Infinity'], correct: 2 },
+  { category: 'TENSOR PRODUCTS', question: 'What does the tensor product combine?', answers: ['Two quantum state spaces into a joint state space', 'Two Python files into one', 'Two variables into a string', 'Two computers into a network'], correct: 0 },
+  { category: 'TENSOR PRODUCTS', question: 'Which NumPy function computes the Kronecker product?', answers: ['np.dot()', 'np.kron()', 'np.mean()', 'np.sum()'], correct: 1 },
+  { category: 'TENSOR PRODUCTS', question: 'What is the dimension of the combined state space of two qubits?', answers: ['2', '3', '4', '8'], correct: 2 },
+  { category: 'TENSOR PRODUCTS', question: 'What is the result of |0⟩ ⊗ |1⟩ in the computational basis?', answers: ['[1, 0, 0, 0]ᵀ', '[0, 1, 0, 0]ᵀ', '[0, 0, 1, 0]ᵀ', '[0, 0, 0, 1]ᵀ'], correct: 1 },
+  { category: 'PYTHON & QISKIT', question: 'Which programming language is commonly used for quantum computing experiments with Qiskit?', answers: ['Python', 'HTML', 'CSS', 'SQL'], correct: 0 },
+  { category: 'PYTHON & QISKIT', question: 'What is Jupyter Notebook primarily used for?', answers: ['Interactive coding and computational experiments', 'Editing videos', 'Managing computer hardware', 'Creating operating systems'], correct: 0 },
+  { category: 'PYTHON & QISKIT', question: 'What is Qiskit?', answers: ['A quantum computing software development framework', 'A computer processor', 'A database', 'An operating system'], correct: 0 },
+  { category: 'PYTHON & QISKIT', question: 'Which command installs Qiskit using pip?', answers: ['pip install qiskit', 'python qiskit download', 'install quantum.exe', 'pip remove qiskit'], correct: 0 },
+  { category: 'PYTHON & QISKIT', question: 'Which command launches Jupyter Notebook?', answers: ['python notebook stop', 'jupyter notebook', 'pip jupyter run', 'open quantum'], correct: 1 },
+  { category: 'PYTHON & QISKIT', question: 'What is the IBM Quantum Platform used for?', answers: ['Accessing quantum computing tools and services', 'Creating social media accounts', 'Editing spreadsheets only', 'Hosting gaming servers'], correct: 0 },
+  { category: 'NUMPY', question: 'Which NumPy command creates a complex-valued array?', answers: ['np.array([1+2j, 3+4j])', 'np.string([1,2])', 'np.text([1,2])', 'np.file([1,2])'], correct: 0 },
+  { category: 'NUMPY', question: 'What is the output of np.kron([1,0], [0,1])?', answers: ['[1, 0, 0, 0]', '[0, 1, 0, 0]', '[0, 0, 1, 0]', '[0, 0, 0, 1]'], correct: 1 },
+  { category: 'NUMPY', question: 'Which NumPy function computes a conjugate inner product for complex vectors?', answers: ['np.vdot()', 'np.zeros()', 'np.arange()', 'np.shape()'], correct: 0 },
+  { category: 'NUMPY', question: 'Which of the following is a valid normalized one-qubit state?', answers: ['[1, 1]ᵀ', '[0, 0]ᵀ', '(1/√2)[1, 1]ᵀ', '[2, 2]ᵀ'], correct: 2 }
+];
+const examQuestionCount = 20;
 
 const days = [
   { name: 'DAY 1', links: [{ title: 'Installing Qiskit & setting up your environment', href: 'https://youtu.be/93-zLTppFZw' }, { title: 'Vectors, what even are they?', href: 'https://www.youtube.com/watch?v=fNk_zzaMoSs' }] },
@@ -316,7 +329,7 @@ function Course({ user, onLogout, onQuiz }) {
 }
 
 function Quiz({ onFinish, onBack }) {
-  const [quizQuestions] = useState(() => [...questions].sort(() => Math.random() - 0.5));
+  const [quizQuestions] = useState(() => [...questions].sort(() => Math.random() - 0.5).slice(0, examQuestionCount));
   const [answers, setAnswers] = useState({});
   const [seconds, setSeconds] = useState(1800);
   const answered = Object.keys(answers).length;
@@ -372,7 +385,7 @@ function QuizResults({ result, onBack }) {
             {question.status !== 'correct' && (
               <div className="review-explanation">
                 <p><strong>Correct answer:</strong> {question.answers[question.correct]}</p>
-                {question.status === 'incorrect' && <p><strong>Why:</strong> {question.explanation}</p>}
+                {question.status === 'incorrect' && question.explanation && <p><strong>Why:</strong> {question.explanation}</p>}
               </div>
             )}
           </li>
