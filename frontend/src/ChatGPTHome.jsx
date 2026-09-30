@@ -1,25 +1,6 @@
 import { useState } from "react";
 
-const dayOneLinks = [
-  {
-    title:
-      "How to Install Qiskit | Coding with Qiskit 1.x | Programming on Quantum Computers",
-    href: "https://www.youtube.com/watch?v=dZWz4Gs_BuI",
-    videoId: "dZWz4Gs_BuI",
-    embedUrl:
-      "https://www.youtube.com/embed/dZWz4Gs_BuI?rel=0&modestbranding=1&playsinline=1",
-  },
-  {
-    title: "Vectors, what even are they?",
-    href: "https://www.youtube.com/watch?v=fNk_zzaMoSs",
-    videoId: "fNk_zzaMoSs",
-    embedUrl:
-      "https://www.youtube.com/embed/fNk_zzaMoSs?rel=0&modestbranding=1&playsinline=1",
-  },
-];
-
-
-export default function ChatGPTHome({ user, onLogout, onQuiz, quizContent }) {
+export default function ChatGPTHome({ user, onLogout, onQuiz, quizContent, days }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [weekOpen, setWeekOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
@@ -77,14 +58,16 @@ function openVideo(link) {
             {weekOpen && (
               <div className="week-menu" id="week-0-menu">
                 <span>Course overview</span>
-                <div className="day-one-links">
-                  <span className="day-one-heading">Day 1</span>
-                  {dayOneLinks.map((link) => (
-                    <a key={link.href} href={link.href} onClick={(event) => { event.preventDefault(); openVideo(link); }}>
-                      {link.title}
-                    </a>
-                  ))}
-                </div>
+                {days.map((day) => (
+                  <div className="week-day-links" key={day.name}>
+                    <span className="week-day-heading">{day.name}</span>
+                    {day.links.map((link) => (
+                      <a key={link.href} href={link.href} onClick={(event) => { event.preventDefault(); openVideo({ ...link, dayName: day.name }); }}>
+                        {link.title}
+                      </a>
+                    ))}
+                  </div>
+                ))}
               </div>
             )}
           </section>
@@ -107,26 +90,23 @@ function openVideo(link) {
           </section>
         ) : selectedVideo && (
           <section className="video-panel" aria-label="Selected video">
-            <p className="video-label">DAY 1 VIDEO</p>
+            <p className="video-label">{selectedVideo.dayName} {selectedVideo.embedUrl ? 'VIDEO' : 'LESSON RESOURCE'}</p>
             <h1>{selectedVideo.title}</h1>
-            <div className="video-frame">
-            <iframe
+            {selectedVideo.embedUrl && (
+              <div className="video-frame">
+                <iframe
                 src={selectedVideo.embedUrl}
                   title={selectedVideo.title}
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-  allowFullScreen
-  referrerPolicy="strict-origin-when-cross-origin"
-  loading="lazy"
-  style={{
-    width: "100%",
-    height: "100%",
-    border: "0",
-  }}
-  />
-
-            </div>
-            <a className="youtube-fallback" href={selectedVideo.href} target="_blank" rel="noreferrer">
-              Open video on YouTube <span aria-hidden="true">↗</span>
+                  allow="autoplay; encrypted-media; picture-in-picture; web-share"
+                  allowFullScreen
+                  referrerPolicy="origin"
+                  loading="lazy"
+                  style={{ width: "100%", height: "100%", border: "0" }}
+                />
+              </div>
+            )}
+            <a className="youtube-fallback" href={selectedVideo.href} target="_blank" rel="noopener noreferrer">
+              {selectedVideo.embedUrl ? 'Open on YouTube' : 'Open lesson in a new tab'} <span aria-hidden="true">↗</span>
             </a>
           </section>
         )}
@@ -151,6 +131,8 @@ const css = `
 .sidebar {
   width: 260px;
   flex: 0 0 260px;
+  height: 100%;
+  overflow-y: auto;
   background: var(--cream);
   border-right: 1px solid var(--line);
   transition: width 180ms ease, flex-basis 180ms ease;
@@ -217,10 +199,10 @@ const css = `
 }
 .quiz-launch-button:hover { border-color: var(--coral); }
 .quiz-launch-button:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
-.day-one-links { display: grid; gap: 4px; margin-top: 14px; }
-.day-one-heading { color: var(--coral); font: 10px var(--mono); letter-spacing: .06em; text-transform: uppercase; }
-.day-one-links a { padding: 6px 0; color: var(--muted); font-size: 12px; line-height: 1.4; text-decoration: none; }
-.day-one-links a:hover { color: var(--ink); text-decoration: underline; text-decoration-color: var(--coral); }
+.week-day-links { display: grid; gap: 4px; margin-top: 14px; }
+.week-day-heading { color: var(--coral); font: 10px var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+.week-day-links a { padding: 6px 0; color: var(--muted); font-size: 12px; line-height: 1.4; text-decoration: none; }
+.week-day-links a:hover { color: var(--ink); text-decoration: underline; text-decoration-color: var(--coral); }
 .main { flex: 1; min-width: 0; background: var(--paper); }
 .quiz-content { height: calc(100% - 64px); overflow: auto; padding: 1px 32px 32px; }
 .account-header {

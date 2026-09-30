@@ -342,14 +342,37 @@ const questions = [
   }
 ];
 const examQuestionCount = 20;
-const courseDayLinks = [
-  { name: 'DAY 1', links: [{ title: 'Installing Qiskit & setting up your environment', href: 'https://youtu.be/93-zLTppFZw' }, { title: 'Vectors, what even are they?', href: 'https://www.youtube.com/watch?v=fNk_zzaMoSs' }] },
-  { name: 'DAY 2', links: [{ title: 'Single Systems', href: 'https://youtu.be/3-c4xJa7Flk' }, { title: 'Multiple Systems', href: 'https://youtu.be/DfZZS8Spe7U' }] },
-  { name: 'DAY 3', links: [{ title: 'Bloch Sphere Visualization | Quantum States with Qiskit', href: 'https://www.youtube.com/watch?v=-hc3T1ibRng' }, { title: 'IBM Quantum Learning / Qiskit "Quantum Circuits"', href: 'https://youtu.be/30U2DTfIrOU' }] },
-  { name: 'DAY 4', links: [{ title: 'Single Qubit Gates | Quantum Computing Explained', href: 'https://www.youtube.com/watch?v=SjpF9iwyRCc' }, { title: 'Video 2', href: 'https://www.youtube.com/watch?v=2LKjw2MjUK8' }] },
-  { name: 'DAY 5', links: [{ title: 'Single Systems', href: 'https://youtu.be/3-c4xJa7Flk' }, { title: 'Multiple Systems', href: 'https://youtu.be/DfZZS8Spe7U' }] },
-  { name: 'DAY 6', links: [{ title: 'MinutePhysics "The No Cloning Theorem"', href: 'https://www.youtube.com/watch?v=owPC60Ue0BE' }, { title: 'IBM Quantum Learning / Qiskit "Entanglement in Action"', href: 'https://learning.quantum.ibm.com/course/basics-of-quantum-information/entanglement-in-action' }] }
-];
+const courseDayLinks = [ { name: 'DAY 1', links: [ { title: 'Installing Qiskit & setting up your environment', href: 'https://youtu.be/93-zLTppFZw', embedUrl: 'https://www.youtube.com/embed/93-zLTppFZw' }, { title: 'Vectors, what even are they?', href: 'https://www.youtube.com/watch?v=fNk_zzaMoSs', embedUrl: 'https://www.youtube.com/embed/fNk_zzaMoSs' } ] },
+ { name: 'DAY 2', links: [ { title: 'Single Systems', href: 'https://youtu.be/3-c4xJa7Flk', embedUrl: 'https://www.youtube.com/embed/3-c4xJa7Flk' },{ title: 'Multiple Systems', href: 'https://youtu.be/DfZZS8Spe7U', embedUrl: 'https://www.youtube.com/embed/DfZZS8Spe7U' } ] },
+ { name: 'DAY 3', links: [ { title: 'Bloch Sphere Visualization | Quantum States with Qiskit', href: 'https://www.youtube.com/watch?v=-hc3T1ibRng', embedUrl: 'https://www.youtube.com/embed/-hc3T1ibRng' }, { title: 'IBM Quantum Learning / Qiskit "Quantum Circuits"', href: 'https://youtu.be/30U2DTfIrOU', embedUrl: 'https://www.youtube.com/embed/30U2DTfIrOU' } ] }, 
+ { name: 'DAY 4', links: [ { title: 'Single Qubit Gates | Quantum Computing Explained', href: 'https://www.youtube.com/watch?v=SjpF9iwyRCc', embedUrl: 'https://www.youtube.com/embed/SjpF9iwyRCc' }, { title: 'Video 2', href: 'https://www.youtube.com/watch?v=2LKjw2MjUK8', embedUrl: 'https://www.youtube.com/embed/2LKjw2MjUK8' } ] }, 
+ { name: 'DAY 5', links: [ { title: 'Single Systems', href: 'https://youtu.be/3-c4xJa7Flk', embedUrl: 'https://www.youtube.com/embed/3-c4xJa7Flk' }, { title: 'Multiple Systems', href: 'https://youtu.be/DfZZS8Spe7U', embedUrl: 'https://www.youtube.com/embed/DfZZS8Spe7U' } ] }, 
+ { name: 'DAY 6', links: [ { title: 'MinutePhysics "The No Cloning Theorem"', href: 'https://www.youtube.com/watch?v=owPC60Ue0BE', embedUrl: 'https://www.youtube.com/embed/owPC60Ue0BE' }, { title: 'IBM Quantum Learning / Qiskit "Entanglement in Action"', href: 'https://learning.quantum.ibm.com/course/basics-of-quantum-information/entanglement-in-action', embedUrl: null } ] } ];
+
+// ==================== YOUTUBE HELPERS (NEW) ====================
+function getYouTubeId(url) {
+  try {
+    const u = new URL(url);
+    if (u.hostname === 'youtu.be') return u.pathname.slice(1);
+    if (u.hostname.endsWith('youtube.com')) {
+      if (u.pathname === '/watch') return u.searchParams.get('v');
+      const match = u.pathname.match(/^\/(?:embed|shorts)\/([\w-]{11})/);
+      if (match) return match[1];
+    }
+  } catch {}
+  return null;
+}
+
+function getEmbedUrl(href) {
+  // Prefer the embedUrl stored in courseDayLinks, fall back to the video ID
+  const id = getYouTubeId(href);
+  if (!id) return null;
+  const known = courseDayLinks
+    .flatMap((day) => day.links)
+    .find((link) => link.embedUrl && link.embedUrl.endsWith(`/${id}`));
+  return `${known ? known.embedUrl : `https://www.youtube.com/embed/${id}`}?rel=0`;
+}
+// ================================================================
 
 const startButton = document.querySelector('#start-button');
 const hero = document.querySelector('.hero');
@@ -383,24 +406,6 @@ const courseSidebar = document.querySelector('.course-sidebar');
 const weekToggle = document.querySelector('#week-toggle');
 const backCourseButton = document.querySelector('#back-course-button');
 const quizBackButton = document.querySelector('#quiz-back-button');
-const localVideoContent = {
-  'day-2-video-1': {
-    title: 'Quantum Computation and Quantum Information',
-    paragraphs: [
-      'This lesson introduces the mathematical and physical foundations used to describe quantum information and quantum computation.',
-      'Explore qubits, quantum states, measurement, quantum gates, circuits, and the principles behind quantum algorithms.',
-      'Use this material as a guide to connect the course concepts with algorithms, entanglement, and error correction.'
-    ]
-  },
-  'day-2-video-2': {
-    title: 'Basics of Quantum Information',
-    paragraphs: [
-      'Quantum information is carried by qubits, whose states can be combined into superpositions and correlated through entanglement.',
-      'Study how measurement changes what can be known about a state, and how gates transform qubits inside a quantum circuit.',
-      'This foundation prepares you to build and reason about quantum circuits and algorithms.'
-    ]
-  }
-};
 
 let currentQuestion = 0;
 let score = 0;
@@ -539,20 +544,47 @@ document.querySelectorAll('.day-dropdown').forEach((dayDropdown) => {
     dayButton.setAttribute('aria-expanded', String(isOpen));
   });
   const dayName = dayDropdown.querySelector('.day-heading span, .day-button span').textContent.trim();
+
+  // ==================== VIDEO CLICK HANDLER (UPDATED) ====================
   dayDropdown.querySelectorAll('.day-links a').forEach((videoLink) => {
     videoLink.addEventListener('click', (event) => {
       event.preventDefault();
       const videoTitle = `${dayName} · ${videoLink.textContent.trim()}`;
       contentPill.textContent = videoTitle;
+
+      // 1) YouTube links: play inside the page
+      const embedUrl = getEmbedUrl(videoLink.href);
+      if (embedUrl) {
+        lessonCopy.innerHTML = `
+          <div class="video-player-panel">
+            <p class="embedded-video-label">${videoTitle}</p>
+            <div style="position:relative;width:100%;aspect-ratio:16/9;">
+              <iframe
+                src="${embedUrl}"
+                title="${videoTitle}"
+                style="position:absolute;inset:0;width:100%;height:100%;border:0;"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen></iframe>
+            </div>
+            <a class="video-external-link" href="${videoLink.href}" target="_blank" rel="noopener noreferrer">Open on YouTube <span aria-hidden="true">↗</span></a>
+          </div>`;
+        return;
+      }
+
+      // 2) Blocked sources (Cambridge / IBM): show local fallback text
       const isBlockedSource = videoLink.href.includes('www.cambridge.org') || videoLink.href.includes('learning.quantum.ibm.com/course/basics-of-quantum-information');
       const localContent = isBlockedSource ? localVideoContent[videoLink.dataset.contentKey] : null;
       if (localContent) {
         lessonCopy.innerHTML = `<div class="embedded-video-fallback"><p class="embedded-video-label">${videoTitle}</p><h2>${localContent.title}</h2>${localContent.paragraphs.map((paragraph) => `<p>${paragraph}</p>`).join('')}</div>`;
         return;
       }
+
+      // 3) Anything else: external link
       lessonCopy.innerHTML = `<div class="video-link-panel"><p class="embedded-video-label">LESSON VIDEO</p><h2>${videoTitle}</h2><a class="video-external-link" href="${videoLink.href}" target="_blank" rel="noopener noreferrer">Open video <span aria-hidden="true">↗</span></a></div>`;
     });
   });
+  // =======================================================================
 });
 weekToggle.addEventListener('click', () => {
   const isOpen = courseSidebar.classList.toggle('is-week-open');
@@ -650,4 +682,3 @@ logoutButton.addEventListener('click', async () => {
   authPanel.hidden = false;
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
-

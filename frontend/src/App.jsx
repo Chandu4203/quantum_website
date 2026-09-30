@@ -110,10 +110,11 @@ function embeddedUrl(href) {
     videoId = url.searchParams.get('v') || url.pathname.match(/^\/(?:shorts|embed)\/([^/]+)/)?.[1] || null;
   }
 
-  if (!videoId) return href;
+  if (!videoId) return null;
   const embedUrl = new URL(`https://www.youtube.com/embed/${videoId}`);
   embedUrl.searchParams.set('autoplay', '1');
   embedUrl.searchParams.set('mute', '1');
+  embedUrl.searchParams.set('playsinline', '1');
   embedUrl.searchParams.set('rel', '0');
   embedUrl.searchParams.set('origin', window.location.origin);
   return embedUrl.toString();
@@ -395,6 +396,17 @@ function QuizResults({ result, onBack }) {
   );
 }
 
+let currentUserRequest;
+
+function getCurrentUser() {
+  if (!currentUserRequest) {
+    currentUserRequest = fetch('/api/me')
+      .then((response) => response.ok ? response.json() : null)
+      .finally(() => { currentUserRequest = null; });
+  }
+  return currentUserRequest;
+}
+
 function App() {
   const [user, setUser] = useState(null);
   const [quizOpen, setQuizOpen] = useState(false);
@@ -402,8 +414,7 @@ function App() {
 
   useEffect(() => {
     let active = true;
-    fetch('/api/me')
-      .then((response) => response.ok ? response.json() : null)
+    getCurrentUser()
       .then((data) => {
         if (active && data?.user) setUser(data.user);
       })
@@ -458,6 +469,10 @@ function App() {
         onLogout={logout}
         onQuiz={() => { setQuizResult(null); setQuizOpen(true); }}
         quizContent={quizContent}
+        days={days.map((day) => ({
+          ...day,
+          links: day.links.map((link) => ({ ...link, embedUrl: embeddedUrl(link.href) }))
+        }))}
       />
     );
   }
