@@ -1,4 +1,5 @@
-.env
+.vercel
+.env*
 data/*.db-shm
 data/*.db-wal
 __pycache__/
