@@ -37,8 +37,8 @@ function isPortOpen(port) {
   });
 }
 
-function start(label, command, args) {
-  const child = spawn(command, args, { stdio: 'inherit' });
+function start(label, command, args, cwd) {
+  const child = spawn(command, args, { stdio: 'inherit', cwd });
   children.push(child);
   child.once('error', (error) => {
     console.error(`${label} failed to start: ${error.message}`);
@@ -79,10 +79,10 @@ async function main() {
   }
 
   if (apiRunning) console.log(`Reusing API at http://localhost:${apiPort}`);
-  else start('API', 'python', ['-m', 'uvicorn', 'fastapi_app:app', '--host', '0.0.0.0', '--port', String(apiPort)]);
+  else start('API', 'python', ['-m', 'uvicorn', 'fastapi_app:app', '--host', '0.0.0.0', '--port', String(apiPort)], path.resolve(__dirname, '../backend'));
 
   if (webRunning) console.log(`Reusing frontend at http://localhost:${webPort}`);
-  else start('Frontend', process.execPath, [path.resolve('node_modules/vite/bin/vite.js'), '--host', '0.0.0.0', '--port', String(webPort), '--strictPort']);
+  else start('Frontend', process.execPath, [path.resolve(__dirname, 'node_modules/vite/bin/vite.js'), '--host', '0.0.0.0', '--port', String(webPort), '--strictPort'], __dirname);
 
   if (!children.length) console.log('Project is already running at http://localhost:5173');
 }

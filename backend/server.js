@@ -5,7 +5,7 @@ const crypto = require('node:crypto');
 const { Pool } = require('pg');
 
 const port = Number(process.env.PORT || 4204);
-const publicRoot = __dirname;
+const publicRoot = path.resolve(__dirname, '../frontend');
 const jwtSecret = process.env.JWT_SECRET || 'project-pulse-development-secret-change-me';
 const demoEmail = (process.env.DEMO_EMAIL || 'member@project.com').toLowerCase();
 const demoPassword = process.env.DEMO_PASSWORD || 'pulse2026';

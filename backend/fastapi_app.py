@@ -13,6 +13,7 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 ROOT = Path(__file__).resolve().parent
+FRONTEND_ROOT = ROOT.parent / "frontend"
 load_dotenv(ROOT / ".env")
 
 JWT_SECRET = os.getenv("JWT_SECRET", "project-pulse-development-secret-change-me")
@@ -124,7 +125,7 @@ def startup():
 
 @app.get("/")
 def index():
-    return FileResponse(ROOT / "index.html")
+    return FileResponse(FRONTEND_ROOT / "index.html")
 
 
 @app.post("/api/login")
@@ -173,7 +174,7 @@ def save_result(payload: ResultRequest, project_pulse_token: str | None = Cookie
 
 @app.get("/{file_path:path}")
 def static_file(file_path: str):
-    requested = (ROOT / file_path).resolve()
-    if not str(requested).startswith(str(ROOT)) or not requested.is_file():
+    requested = (FRONTEND_ROOT / file_path).resolve()
+    if not requested.is_relative_to(FRONTEND_ROOT) or not requested.is_file():
         raise HTTPException(status_code=404, detail="Not found")
     return FileResponse(requested)
