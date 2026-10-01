@@ -15,14 +15,18 @@ const memberDisplayNames = {
   '23BQ1A4251': 'G.Kamesh',
   '24BQ5A4202': 'K.chandra sekhar'
 };
-const pool = new Pool({
-  host: process.env.PGHOST || 'localhost',
-  port: Number(process.env.PGPORT || 5432),
-  database: process.env.PGDATABASE || 'Quantum Computing',
-  user: process.env.PGUSER || 'Admin',
-  password: process.env.PGPASSWORD,
-  ssl: process.env.DATABASE_SSL === 'true' ? { rejectUnauthorized: false } : false
-});
+const pool = new Pool(
+  process.env.DATABASE_URL
+    ? { connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } }
+    : {
+        host: process.env.PGHOST || 'localhost',
+        port: Number(process.env.PGPORT || 5432),
+        database: process.env.PGDATABASE || 'Quantum Computing',
+        user: process.env.PGUSER || 'Admin',
+        password: process.env.PGPASSWORD,
+        ssl: false
+      }
+);
 
 const hashPassword = (password, salt = crypto.randomBytes(16).toString('hex')) => `${salt}:${crypto.scryptSync(password, salt, 64).toString('hex')}`;
 const verifyPassword = (password, storedHash) => {
