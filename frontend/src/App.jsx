@@ -61,12 +61,12 @@ const questions = [
 const examQuestionCount = 20;
 
 const days = [
-  { name: 'DAY 1', links: [{ title: 'Installing Qiskit & setting up your environment', href: 'https://youtu.be/93-zLTppFZw' }, { title: 'Vectors, what even are they?', href: 'https://www.youtube.com/watch?v=fNk_zzaMoSs' }] },
-  { name: 'DAY 2', links: [{ title: 'Single Systems', href: 'https://youtu.be/3-c4xJa7Flk' }, { title: 'Multiple Systems', href: 'https://youtu.be/DfZZS8Spe7U' }] },
-  { name: 'DAY 3', links: [{ title: 'Bloch Sphere Visualization | Quantum States with Qiskit', href: 'https://www.youtube.com/watch?v=-hc3T1ibRng' }, { title: 'IBM Quantum Learning / Qiskit "Quantum Circuits"', href: 'https://youtu.be/30U2DTfIrOU' }] },
-  { name: 'DAY 4', links: [{ title: 'Single Qubit Gates | Quantum Computing Explained', href: 'https://www.youtube.com/watch?v=SjpF9iwyRCc' }, { title: 'Video 2', href: 'https://www.youtube.com/watch?v=2LKjw2MjUK8' }] },
-  { name: 'DAY 5', links: [{ title: 'Single Systems', href: 'https://youtu.be/3-c4xJa7Flk' }, { title: 'Multiple Systems', href: 'https://youtu.be/DfZZS8Spe7U' }] },
-  { name: 'DAY 6', links: [{ title: 'MinutePhysics "The No Cloning Theorem"', href: 'https://www.youtube.com/watch?v=owPC60Ue0BE' }, { title: 'IBM Quantum Learning / Qiskit "Entanglement in Action"', href: 'https://learning.quantum.ibm.com/course/basics-of-quantum-information/entanglement-in-action' }] }
+  { name: 'DAY 1', links: [{ title: 'Installing Qiskit & setting up your environment', href: 'https://www.youtube.com/watch?v=fNk_zzaMoSs', embedUrl: 'https://www.youtube.com/embed/fNk_zzaMoSs' }, { title: 'Vectors, what even are they?', href: 'https://www.youtube.com/watch?v=fNk_zzaMoSs', embedUrl: 'https://www.youtube.com/embed/fNk_zzaMoSs' }] },
+  { name: 'DAY 2', links: [{ title: 'Single Systems', href: 'https://www.youtube.com/watch?v=PFDu9oVAE-g', embedUrl: 'https://www.youtube.com/embed/PFDu9oVAE-g' }, { title: 'Multiple Systems', href: 'https://www.youtube.com/watch?v=JAfUZRhEEno', embedUrl: 'https://www.youtube.com/embed/JAfUZRhEEno' }] },
+  { name: 'DAY 3', links: [{ title: 'Bloch Sphere Visualization', href: 'https://www.youtube.com/watch?v=a-dIl1Y1aTs', embedUrl: 'https://www.youtube.com/embed/a-dIl1Y1aTs' }, { title: 'Visualizing Qubits on the Bloch Sphere"', href: 'https://youtu.be/30U2DTfIrOU', embedUrl: 'https://www.youtube.com/embed/30U2DTfIrOU' }] },
+  { name: 'DAY 4', links: [{ title: 'Single Qubit Gates (Pauli X, Y, Z)', href: 'https://www.youtube.com/watch?v=SjpF9iwyRCc', embedUrl: 'https://www.youtube.com/embed/SjpF9iwyRCc' }, { title: 'Bloch Sphere Visualization with quantum gates', href: 'https://www.youtube.com/watch?v=WjjUfEpej-0', embedUrl: 'https://www.youtube.com/embed/WjjUfEpej-0' }] },
+  { name: 'DAY 5', links: [{ title: 'Multiple Systems', href: 'https://youtu.be/DfZZS8Spe7U', embedUrl: 'https://www.youtube.com/embed/DfZZS8Spe7U' }, { title: 'Quantum circuits', href: 'https://youtu.be/30U2DTfIrOU', embedUrl: 'https://www.youtube.com/embed/30U2DTfIrOU' }] },
+  { name: 'DAY 6', links: [{ title: 'Watrous Lesson 4, Entanglement in Action (teleportation, superdense coding)"', href: 'https://youtu.be/GSsElSQgMbU', embedUrl: 'https://www.youtube.com/embed/GSsElSQgMbU' }, { title: 'Watrous Lesson 9, Density Matrices (also covers the Bloch sphere)"', href: 'https://youtu.be/CeK9ry8G8HQ', embedUrl: 'https://www.youtube.com/embed/CeK9ry8G8HQ' }] }
 ];
 
 const localContent = {
@@ -164,7 +164,7 @@ function DayDropdown({ day, onVideo, selectedHref }) {
       </button>
       <div className="day-links" id={`${day.name.toLowerCase().replace(' ', '-')}-links`}>
         {day.links.map((link) => {
-          const opensOnYouTube = day.name === 'DAY 1' && link.href === 'https://youtu.be/93-zLTppFZw';
+          const opensOnYouTube = /^https?:\/\/(?:www\.)?(?:youtu\.be|youtube\.com|youtube-nocookie\.com)/i.test(link.href);
           return (
             <a
               className={selectedHref === link.href ? 'is-active' : ''}
@@ -176,6 +176,8 @@ function DayDropdown({ day, onVideo, selectedHref }) {
               onClick={(event) => {
                 if (!opensOnYouTube) {
                   event.preventDefault();
+                  onVideo(day.name, link);
+                } else {
                   onVideo(day.name, link);
                 }
               }}
@@ -323,16 +325,33 @@ function Course({ user, onLogout, onQuiz }) {
                 <h2>{lesson.link.title}</h2>
                 {isVideoPlaying ? (
                   <div className="embedded-video">
-                    <iframe
-                      src={embeddedUrl(lesson.link.href)}
-                      title={lesson.link.title}
-                      allow="autoplay; encrypted-media; picture-in-picture"
-                      allowFullScreen
-                      referrerPolicy="origin"
-                    />
+                    <button
+                      className="video-play-button"
+                      type="button"
+                      onClick={() => {
+                        const watchUrl = new URL(lesson.link.href);
+                        watchUrl.searchParams.set('autoplay', '1');
+                        watchUrl.searchParams.set('mute', '0');
+                        watchUrl.searchParams.set('rel', '0');
+                        window.open(watchUrl.toString(), '_blank', 'noopener,noreferrer');
+                      }}
+                    >
+                      <span aria-hidden="true">▶</span> Open in YouTube
+                    </button>
                   </div>
                 ) : (
-                  <button className="video-play-button" type="button" onClick={() => setIsVideoPlaying(true)}>
+                  <button
+                    className="video-play-button"
+                    type="button"
+                    onClick={() => {
+                      const watchUrl = new URL(lesson.link.href);
+                      watchUrl.searchParams.set('autoplay', '1');
+                      watchUrl.searchParams.set('mute', '0');
+                      watchUrl.searchParams.set('rel', '0');
+                      window.open(watchUrl.toString(), '_blank', 'noopener,noreferrer');
+                      setIsVideoPlaying(true);
+                    }}
+                  >
                     <span aria-hidden="true">▶</span> Play video
                   </button>
                 )}
