@@ -407,6 +407,12 @@ const courseSidebar = document.querySelector('.course-sidebar');
 const weekToggle = document.querySelector('#week-toggle');
 const backCourseButton = document.querySelector('#back-course-button');
 const quizBackButton = document.querySelector('#quiz-back-button');
+const API_URL = import.meta.env.VITE_API_URL;
+fetch(`${API_URL}/api/users`)
+  .then((response) => response.json())
+  .then((users) => {
+    // Handle the fetched users data
+  });
 
 let currentQuestion = 0;
 let score = 0;

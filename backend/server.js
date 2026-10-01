@@ -28,6 +28,7 @@ const pool = new Pool(
       }
 );
 
+
 const hashPassword = (password, salt = crypto.randomBytes(16).toString('hex')) => `${salt}:${crypto.scryptSync(password, salt, 64).toString('hex')}`;
 const verifyPassword = (password, storedHash) => {
   const [salt, expected] = storedHash.split(':');
