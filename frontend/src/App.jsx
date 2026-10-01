@@ -163,11 +163,27 @@ function DayDropdown({ day, onVideo, selectedHref }) {
         <span className="day-chevron">⌄</span>
       </button>
       <div className="day-links" id={`${day.name.toLowerCase().replace(' ', '-')}-links`}>
-        {day.links.map((link) => (
-          <a className={selectedHref === link.href ? 'is-active' : ''} href={link.href} key={link.title} aria-current={selectedHref === link.href ? 'page' : undefined} onClick={(event) => { event.preventDefault(); onVideo(day.name, link); }}>
-            {link.title}
-          </a>
-        ))}
+        {day.links.map((link) => {
+          const opensOnYouTube = day.name === 'DAY 1' && link.href === 'https://youtu.be/93-zLTppFZw';
+          return (
+            <a
+              className={selectedHref === link.href ? 'is-active' : ''}
+              href={link.href}
+              key={link.title}
+              target={opensOnYouTube ? '_blank' : undefined}
+              rel={opensOnYouTube ? 'noopener noreferrer' : undefined}
+              aria-current={selectedHref === link.href ? 'page' : undefined}
+              onClick={(event) => {
+                if (!opensOnYouTube) {
+                  event.preventDefault();
+                  onVideo(day.name, link);
+                }
+              }}
+            >
+              {link.title}
+            </a>
+          );
+        })}
       </div>
     </div>
   );
@@ -396,31 +412,10 @@ function QuizResults({ result, onBack }) {
   );
 }
 
-let currentUserRequest;
-
-function getCurrentUser() {
-  if (!currentUserRequest) {
-    currentUserRequest = fetch('/api/me')
-      .then((response) => response.ok ? response.json() : null)
-      .finally(() => { currentUserRequest = null; });
-  }
-  return currentUserRequest;
-}
-
 function App() {
   const [user, setUser] = useState(null);
   const [quizOpen, setQuizOpen] = useState(false);
   const [quizResult, setQuizResult] = useState(null);
-
-  useEffect(() => {
-    let active = true;
-    getCurrentUser()
-      .then((data) => {
-        if (active && data?.user) setUser(data.user);
-      })
-      .catch(() => {});
-    return () => { active = false; };
-  }, []);
 
   async function logout() {
     try {
