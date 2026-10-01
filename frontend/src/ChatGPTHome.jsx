@@ -68,15 +68,13 @@ function openVideo(link) {
                     ))}
                   </div>
                 ))}
+                <button className="quiz-launch-button" type="button" onClick={onQuiz}>
+                  <span>Start quiz</span>
+                  <span aria-hidden="true">→</span>
+                </button>
               </div>
             )}
           </section>
-        )}
-        {sidebarOpen && (
-          <button className="quiz-launch-button" type="button" onClick={onQuiz}>
-            <span>Start quiz</span>
-            <span aria-hidden="true">→</span>
-          </button>
         )}
       </aside>
       <main className="main" aria-label="Right panel">
