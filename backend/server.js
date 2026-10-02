@@ -16,12 +16,13 @@ const memberDisplayNames = {
   '24BQ5A4202': 'K.chandra sekhar'
 };
 
+const { Pool } = require('pg');
+
+
+
 const pool = new Pool({
-  host: "localhost",
-  user: "postgres",
-  password: "5477",
-  database: "quantum",
-  port: 5432
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
 });
 
 pool.connect()
@@ -30,6 +31,7 @@ pool.connect()
     console.error("PostgreSQL connection failed:", err.message);
     process.exit(1);
   });
+  console.log('DATABASE_URL set?', !!process.env.DATABASE_URL);
 
 const hashPassword = (password, salt = crypto.randomBytes(16).toString('hex')) => `${salt}:${crypto.scryptSync(password, salt, 64).toString('hex')}`;
 const verifyPassword = (password, storedHash) => {
