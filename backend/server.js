@@ -15,19 +15,21 @@ const memberDisplayNames = {
   '23BQ1A4251': 'G.Kamesh',
   '24BQ5A4202': 'K.chandra sekhar'
 };
-const pool = new Pool(
-  process.env.DATABASE_URL
-    ? { connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } }
-    : {
-        host: process.env.PGHOST || 'localhost',
-        port: Number(process.env.PGPORT || 5432),
-        database: process.env.PGDATABASE || 'Quantum Computing',
-        user: process.env.PGUSER || 'Admin',
-        password: process.env.PGPASSWORD,
-        ssl: false
-      }
-);
 
+const pool = new Pool({
+  host: "localhost",
+  user: "postgres",
+  password: "5477",
+  database: "quantum",
+  port: 5432
+});
+
+pool.connect()
+  .then(() => console.log("PostgreSQL connected"))
+  .catch(err => {
+    console.error("PostgreSQL connection failed:", err.message);
+    process.exit(1);
+  });
 
 const hashPassword = (password, salt = crypto.randomBytes(16).toString('hex')) => `${salt}:${crypto.scryptSync(password, salt, 64).toString('hex')}`;
 const verifyPassword = (password, storedHash) => {
