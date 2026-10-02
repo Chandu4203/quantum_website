@@ -16,8 +16,6 @@ const memberDisplayNames = {
   '24BQ5A4202': 'K.chandra sekhar'
 };
 
-const { Pool } = require('pg');   // only ONCE in the whole file
-
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
@@ -32,7 +30,7 @@ pool.connect()
     console.error('PostgreSQL connection failed:', err.message, err.code);
     process.exit(1);
   });
-  
+
   console.log('DATABASE_URL set?', !!process.env.DATABASE_URL);
 
 const hashPassword = (password, salt = crypto.randomBytes(16).toString('hex')) => `${salt}:${crypto.scryptSync(password, salt, 64).toString('hex')}`;
