@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function ChatGPTHome({ user, onLogout, onQuiz, quizContent, days }) {
+export default function ChatGPTHome({ user, onLogout, onQuiz, backendStatus, quizContent, days }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [weekOpen, setWeekOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
@@ -79,6 +79,7 @@ function openVideo(link) {
       </aside>
       <main className="main" aria-label="Right panel">
         <header className="account-header">
+          <span className={`backend-status is-${backendStatus}`} role="status" aria-live="polite"><span className="backend-status-dot" />{backendStatus === 'checking' ? 'CHECKING BACKEND' : `BACKEND ${backendStatus.toUpperCase()}`}</span>
           <span className="account-label">SIGNED IN AS <strong>{accountName}</strong></span>
           <button className="logout-button" type="button" onClick={onLogout}>Sign out</button>
         </header>
@@ -214,6 +215,7 @@ const css = `
 }
 .account-label { color: var(--muted); font: 10px/1.5 var(--mono); letter-spacing: .04em; text-align: right; }
 .account-label strong { color: var(--ink); font-weight: 500; }
+.account-header .backend-status { margin-right: auto; font: 10px/1.5 var(--mono); letter-spacing: .04em; }
 .logout-button {
   padding: 9px 12px;
   border: 1px solid var(--line);

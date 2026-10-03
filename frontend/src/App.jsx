@@ -435,6 +435,28 @@ function App() {
   const [user, setUser] = useState(null);
   const [quizOpen, setQuizOpen] = useState(false);
   const [quizResult, setQuizResult] = useState(null);
+  const [backendStatus, setBackendStatus] = useState('checking');
+
+  useEffect(() => {
+    let active = true;
+
+    async function checkBackend() {
+      try {
+        const response = await fetch('/api/health', { cache: 'no-store' });
+        const health = response.ok ? await response.json() : null;
+        if (active) setBackendStatus(health?.status === 'ok' ? 'online' : 'offline');
+      } catch {
+        if (active) setBackendStatus('offline');
+      }
+    }
+
+    checkBackend();
+    const interval = setInterval(checkBackend, 5000);
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
+  }, []);
 
   async function logout() {
     try {
@@ -482,6 +504,7 @@ function App() {
         user={user}
         onLogout={logout}
         onQuiz={() => { setQuizResult(null); setQuizOpen(true); }}
+        backendStatus={backendStatus}
         quizContent={quizContent}
         days={days.map((day) => ({
           ...day,
@@ -491,7 +514,7 @@ function App() {
     );
   }
 
-  return <main className="app-shell"><header className="topbar"><a className="brand" href="#top" aria-label="Project Pulse home"><span className="brand-mark"><span /><span /><span /></span><span>Quantum Computing<span className="brand-accent" /></span></a><div className="topbar-meta"><span className="status-dot" /> <span>20 QUESTIONS</span></div></header><Login onLogin={setUser} /><footer className="footer"><span>PROJECT / 2026</span><span>BUILT FOR BETTER UNDERSTANDING</span></footer></main>;
+  return <main className="app-shell"><header className="topbar"><a className="brand" href="#top" aria-label="Project Pulse home"><span className="brand-mark"><span /><span /><span /></span><span>Quantum Computing<span className="brand-accent" /></span></a><div className="topbar-meta"><span className={`backend-status is-${backendStatus}`} role="status" aria-live="polite"><span className="backend-status-dot" />{backendStatus === 'checking' ? 'CHECKING BACKEND' : `BACKEND ${backendStatus.toUpperCase()}`}</span><span className="meta-divider">·</span><span className="question-count">20 QUESTIONS</span></div></header><Login onLogin={setUser} /><footer className="footer"><span>PROJECT / 2026</span><span>BUILT FOR BETTER UNDERSTANDING</span></footer></main>;
 }
 
 export default App;

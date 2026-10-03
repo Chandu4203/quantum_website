@@ -10,7 +10,7 @@ const jwtSecret = process.env.JWT_SECRET || 'project-pulse-development-secret-ch
 const demoEmail = (process.env.DEMO_EMAIL || 'member@project.com').toLowerCase();
 const demoPassword = process.env.DEMO_PASSWORD || 'pulse2026';
 const memberDisplayNames = {
-  '23BQ1A4202': 'A.Sa Charan',
+  '23BQ1A4202': 'A.Sai Charan',
   '23BQ1A4231': 'CH.Aparna',
   '23BQ1A4251': 'G.Kamesh',
   '24BQ5A4202': 'K.chandra sekhar'
@@ -40,7 +40,7 @@ const verifyPassword = (password, storedHash) => {
   return crypto.timingSafeEqual(Buffer.from(actual, 'hex'), Buffer.from(expected, 'hex'));
 };
 const memberAccounts = [
-  ['23BQ1A4202', 'A.Sa Charan', '23BQ1A4202'],
+  ['23BQ1A4202', 'A.Sai Charan', '23BQ1A4202'],
   ['23BQ1A4231', 'CH.Aparna', '23BQ1A4231'],
   ['23BQ1A4251', 'G.Kamesh', '23BQ1A4251'],
   ['24BQ5A4203', 'K.chandra sekhar', '24BQ5A4203']
@@ -128,6 +128,10 @@ function serveStatic(request, response) {
 
 const server = http.createServer(async (request, response) => {
   try {
+    if (request.url === '/api/health' && request.method === 'GET') {
+      sendJson(response, 200, { status: 'ok', message: 'Backend is running' });
+      return;
+    }
     if (request.url === '/api/login' && request.method === 'POST') {
       const { username, password } = await readBody(request);
       const identifier = typeof username === 'string' ? username.trim() : '';
